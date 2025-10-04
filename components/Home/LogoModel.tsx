@@ -29,8 +29,8 @@ function Logo() {
         (mouse.current.x * 0.5 - modelRef.current.rotation.y) * 0.05;
 
       // Smooth X rotation (with clamping between 1.05 and 1.35)
-      let targetX = mouse.current.y * 0.5;
-      let nextX =
+      const targetX = mouse.current.y * 0.5;
+      const nextX =
         modelRef.current.rotation.x +
         (targetX - modelRef.current.rotation.x) * 0.05;
 
