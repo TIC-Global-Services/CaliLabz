@@ -22,6 +22,7 @@ function Logo() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+
   useFrame(() => {
     if (modelRef.current) {
       // Smooth Y rotation
@@ -59,8 +60,8 @@ function Logo() {
 
 const LogoModel = () => {
   return (
-    <div className="w-full h-[400px]">
-      <Canvas camera={{ position: [0, 0, 5] }}>
+    <div className="w-full h-[50dvh] z-40">
+      <Canvas camera={{ position: [0, 0, 5], fov:60 }}>
         <ambientLight intensity={1.2} />
         <Logo />
         <OrbitControls enableZoom={false} enableRotate={false} />

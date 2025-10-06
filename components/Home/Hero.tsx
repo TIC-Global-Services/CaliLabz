@@ -8,6 +8,7 @@ import { useDevice } from "@/hooks/useDevice";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import LogoModel from "./LogoModel";
+import Smoke from "@/assets/Home/Smoke.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,9 +22,9 @@ const Hero = () => {
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const descRef = useRef<HTMLParagraphElement | null>(null);
   const ModelRef = useRef<HTMLDivElement | null>(null);
+  const smokeRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // Parallax effect
     const handleMove = (e: MouseEvent) => {
       const { innerWidth, innerHeight } = window;
       const x = (e.clientX / innerWidth - 0.5) * 20;
@@ -53,7 +54,6 @@ const Hero = () => {
 
     window.addEventListener("mousemove", handleMove);
 
-    // Scroll animations
     if (heroRef.current && buildingsRef.current) {
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -65,23 +65,16 @@ const Hero = () => {
         },
       });
 
-      // overlay fade in
-      tl.to(overlayRef.current, { opacity: 0.5, duration: 1 }, 0);
-
-      // sky backdrop fade out
+      // Fade overlay, sky, and bring video in
+      tl.to(overlayRef.current, { opacity: 0.1, duration: 1 }, 0);
       tl.to(skyRef.current, { opacity: 0, duration: 1 }, 0);
-
-      // text color
       tl.to(textRef.current, { color: "#000", duration: 1 }, 0.2);
-
-      // description fade in
       tl.fromTo(
         descRef.current,
         { opacity: 0, y: 50 },
         { opacity: 1, y: 0, duration: 1 },
         0.4
       );
-
       tl.fromTo(
         ModelRef.current,
         { opacity: 0, y: 100 },
@@ -89,16 +82,21 @@ const Hero = () => {
         0.4
       );
 
+      // Smoke effect animation
+      tl.fromTo(
+        smokeRef.current,
+        { opacity: 0, y: 100 },
+        { opacity: 0.8, y: -50, duration: 1.5 },
+        0.3
+      );
 
+      tl.to(buildingsRef.current, { zIndex: 10, duration: 0 }, 0.1);
 
-      // move buildings behind overlay
+      // ⚡️ Bring Text + Model to Front After Scroll
       tl.to(
-        buildingsRef.current,
-        {
-          zIndex: 10, // move behind overlay z-20
-          duration: 0, // instant z-index change
-        },
-        0.1
+        [textRef.current, ModelRef.current],
+        { zIndex: 40, duration: 0 },
+        0.6
       );
     }
 
@@ -135,29 +133,112 @@ const Hero = () => {
       {/* White Overlay */}
       <div
         ref={overlayRef}
-        className="absolute inset-0 bg-white opacity-0 z-20 will-change-opacity"
+        className="absolute inset-0 bg-black opacity-0 z-20 will-change-opacity"
       />
 
+      {/* Smoke Effect */}
+      <div
+        ref={smokeRef}
+        className="absolute inset-0 z-25 opacity-0 will-change-transform pointer-events-none flex items-end justify-center w-full h-dvh mt-32"
+      >
+        {/* Base smoke layer */}
+        <Image
+          src={Smoke}
+          alt="smoke"
+          fill
+          priority
+          className="object-cover   w-full h-dvh"
+          
+        />
+
+        {/* Soft extra fog layers */}
+        <div
+          className="absolute bottom-0 left-1/4 w-3/4 h-[50vh] animate-smoke-drift-1"
+          style={{
+            background:
+              "radial-gradient(ellipse, rgba(220, 220, 220, 0.5) 0%, transparent 60%)",
+            filter: "blur(60px)",
+            mixBlendMode: "screen",
+          }}
+        />
+        <div
+          className="absolute bottom-0 right-1/4 w-3/4 h-[45vh] animate-smoke-drift-2"
+          style={{
+            background:
+              "radial-gradient(ellipse, rgba(210, 210, 210, 0.4) 0%, transparent 60%)",
+            filter: "blur(55px)",
+            mixBlendMode: "screen",
+          }}
+        />
+
+        <style jsx>{`
+          @keyframes smoke-drift-1 {
+            0%,
+            100% {
+              transform: translateX(0) translateY(0);
+            }
+            50% {
+              transform: translateX(-30px) translateY(-20px);
+            }
+          }
+
+          @keyframes smoke-drift-2 {
+            0%,
+            100% {
+              transform: translateX(0) translateY(0);
+            }
+            50% {
+              transform: translateX(30px) translateY(-25px);
+            }
+          }
+
+          @keyframes smoke-float {
+            0%,
+            100% {
+              transform: translateY(0) scale(1);
+              opacity: 0.8;
+            }
+            50% {
+              transform: translateY(-20px) scale(1.05);
+              opacity: 1;
+            }
+          }
+
+          .animate-smoke-float {
+            animation: smoke-float 15s ease-in-out infinite;
+          }
+
+          .animate-smoke-drift-1 {
+            animation: smoke-drift-1 10s ease-in-out infinite;
+          }
+
+          .animate-smoke-drift-2 {
+            animation: smoke-drift-2 12s ease-in-out infinite;
+          }
+        `}</style>
+      </div>
+
       {/* Content */}
-      <div className="relative z-20 flex flex-col items-center justify-center min-h-screen text-center px-6">
-        <div className=" absolute top-[15%] will-change-transform">
+      <div className="relative z-20 flex flex-col items-center justify-center min-h-screen text-center px-6 h-screen">
+        <div className="absolute top-[15%] will-change-transform z-30">
           <h1
             ref={textRef}
-            className="font-kento text-5xl md:text-9xl text-white tracking-wide "
+            className="font-kento text-5xl md:text-9xl text-white tracking-wide"
           >
             Cali Labz
           </h1>
 
           <p
             ref={descRef}
-            className=" text-xs md:text-base max-w-4xl mx-auto text-black opacity-0 will-change-transform px-5"
+            className="text-xs md:text-base max-w-4xl mx-auto text-black opacity-0 will-change-transform px-5"
           >
             Cali Labz brings the Californian cannabis experience to Europe. We
             offer consumers premium cannabis products and entrepreneurs the
             chance to run modern dispensaries in Spain. With quality and trust
             at our core, we serve both private customers and business partners.
           </p>
-          <div ref={ModelRef}>
+
+          <div ref={ModelRef} className=" z-40">
             <LogoModel />
           </div>
         </div>
