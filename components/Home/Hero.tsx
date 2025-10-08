@@ -9,6 +9,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import LogoModel from "./LogoModel";
 import Smoke from "@/assets/Home/Smoke.png";
+import SmokeCanvas from "../Reusable/Smoke";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -139,83 +140,9 @@ const Hero = () => {
       {/* Smoke Effect */}
       <div
         ref={smokeRef}
-        className="absolute inset-0 z-25 opacity-0 will-change-transform pointer-events-none flex items-end justify-center w-full h-dvh mt-32"
+        className=" absolute inset-0 z-20 w-full h-full"
       >
-        {/* Base smoke layer */}
-        <Image
-          src={Smoke}
-          alt="smoke"
-          fill
-          priority
-          className="object-cover   w-full h-dvh"
-          
-        />
-
-        {/* Soft extra fog layers */}
-        <div
-          className="absolute bottom-0 left-1/4 w-3/4 h-[50vh] animate-smoke-drift-1"
-          style={{
-            background:
-              "radial-gradient(ellipse, rgba(220, 220, 220, 0.5) 0%, transparent 60%)",
-            filter: "blur(60px)",
-            mixBlendMode: "screen",
-          }}
-        />
-        <div
-          className="absolute bottom-0 right-1/4 w-3/4 h-[45vh] animate-smoke-drift-2"
-          style={{
-            background:
-              "radial-gradient(ellipse, rgba(210, 210, 210, 0.4) 0%, transparent 60%)",
-            filter: "blur(55px)",
-            mixBlendMode: "screen",
-          }}
-        />
-
-        <style jsx>{`
-          @keyframes smoke-drift-1 {
-            0%,
-            100% {
-              transform: translateX(0) translateY(0);
-            }
-            50% {
-              transform: translateX(-30px) translateY(-20px);
-            }
-          }
-
-          @keyframes smoke-drift-2 {
-            0%,
-            100% {
-              transform: translateX(0) translateY(0);
-            }
-            50% {
-              transform: translateX(30px) translateY(-25px);
-            }
-          }
-
-          @keyframes smoke-float {
-            0%,
-            100% {
-              transform: translateY(0) scale(1);
-              opacity: 0.8;
-            }
-            50% {
-              transform: translateY(-20px) scale(1.05);
-              opacity: 1;
-            }
-          }
-
-          .animate-smoke-float {
-            animation: smoke-float 15s ease-in-out infinite;
-          }
-
-          .animate-smoke-drift-1 {
-            animation: smoke-drift-1 10s ease-in-out infinite;
-          }
-
-          .animate-smoke-drift-2 {
-            animation: smoke-drift-2 12s ease-in-out infinite;
-          }
-        `}</style>
+        <SmokeCanvas />
       </div>
 
       {/* Content */}

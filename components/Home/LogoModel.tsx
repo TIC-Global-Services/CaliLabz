@@ -6,7 +6,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { Mesh, DirectionalLight } from "three";
 
 function Logo() {
-  const gltf = useLoader(GLTFLoader, "/Model/CA_Logo.glb");
+  const gltf = useLoader(GLTFLoader, "/Model/CA_Logo1.glb");
   const modelRef = useRef<Mesh>(null!);
   const lightRef = useRef<DirectionalLight>(null!);
 
