@@ -8,7 +8,6 @@ import { useDevice } from "@/hooks/useDevice";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import LogoModel from "./LogoModel";
-import Smoke from "@/assets/Home/Smoke.png";
 import SmokeCanvas from "../Reusable/Smoke";
 
 gsap.registerPlugin(ScrollTrigger);

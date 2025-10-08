@@ -9,8 +9,8 @@ const SmokeCanvas: React.FC = () => {
   useEffect(() => {
     if (!mountRef.current) return;
 
-    let width = window.innerWidth;
-    let height = window.innerHeight;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
     const clock = new THREE.Clock();
     const scene = new THREE.Scene();
