@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import SkyBackdrop from "@/assets/Home/SkyBackdrop.jpg";
-import BackdropBuildings from "@/assets/Home/BackdropBuildings.png";
+import BackdropBuildings from "@/assets/Home/BackdropBuildings2.png";
 import MobileBackdropBuildings from "@/assets/Home/MobileBackdropBuildings.png";
 import Image from "next/image";
 import { useDevice } from "@/hooks/useDevice";
@@ -9,6 +9,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import LogoModel from "./LogoModel";
 import SmokeCanvas from "../Reusable/Smoke";
+import WeedSmokeComponent from "../Reusable/WeedSmoke";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,19 +28,19 @@ const Hero = () => {
   useEffect(() => {
     const handleMove = (e: MouseEvent) => {
       const { innerWidth, innerHeight } = window;
-      const x = (e.clientX / innerWidth - 0.5) * 20;
-      const y = (e.clientY / innerHeight - 0.5) * 20;
+      const x = (e.clientX / innerWidth - 0.5) * 10;
+      const y = (e.clientY / innerHeight - 0.5) * 10;
 
       gsap.to(skyRef.current, {
-        x: x * 0.4,
-        y: y * 0.4,
+        x: x * 0.5,
+        y: y * 0.5,
         duration: 1.2,
         ease: "power3.out",
       });
 
       gsap.to(buildingsRef.current, {
-        x: x * 1.2,
-        y: y * 1.2,
+        x: x * 1,
+        y: y * 1,
         duration: 1.2,
         ease: "power3.out",
       });
@@ -86,7 +87,7 @@ const Hero = () => {
       tl.fromTo(
         smokeRef.current,
         { opacity: 0, y: 100 },
-        { opacity: 0.8, y: -50, duration: 1.5 },
+        { opacity: 0.8, y: 0, duration: 1.5 },
         0.3
       );
 
@@ -109,7 +110,7 @@ const Hero = () => {
   return (
     <section
       ref={heroRef}
-      className="relative w-full min-h-[100dvh] overflow-hidden saturate-180"
+      className="relative w-full overflow-hidden saturate-160"
     >
       {/* Sky Background */}
       <Image
@@ -127,7 +128,7 @@ const Hero = () => {
         alt="Buildings"
         priority
         ref={buildingsRef}
-        className="absolute bottom-0 md:-bottom-20 left-0 w-full h-auto z-30 will-change-transform"
+        className="absolute bottom-0  left-0 w-full h-[80dvh] object-top object-cover z-30 will-change-transform"
       />
 
       {/* White Overlay */}
@@ -139,9 +140,10 @@ const Hero = () => {
       {/* Smoke Effect */}
       <div
         ref={smokeRef}
-        className=" absolute inset-0 z-20 w-full h-full"
+        className=" absolute inset-0 z-20 w-full h-full "
       >
-        <SmokeCanvas />
+        {/* <SmokeCanvas /> */}
+        <WeedSmokeComponent />
       </div>
 
       {/* Content */}

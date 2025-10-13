@@ -94,10 +94,19 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div
-      ref={navbarRef}
-      className="w-full fixed top-0 left-0 z-50 flex items-center justify-between py-4 md:py-6 px-6 md:px-14 transition-colors duration-300 backdrop-blur-xl"
-    >
+<div
+  ref={navbarRef}
+  className="
+    fixed top-0 left-0 z-50
+    w-full flex items-center justify-between
+    py-4 md:py-6 px-6 md:px-14
+    transition-colors duration-300
+    bg-white/5 backdrop-blur-md
+    
+    
+    overflow-hidden
+  "
+>
       {/* Logo */}
       <Link href="/" className="flex items-center">
         <Image

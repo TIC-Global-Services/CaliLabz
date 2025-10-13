@@ -27,7 +27,7 @@ function Logo() {
     if (modelRef.current) {
       // Smooth Y rotation
       modelRef.current.rotation.y +=
-        (mouse.current.x * 0.5 - modelRef.current.rotation.y) * 0.05;
+        (mouse.current.x * 0.2 - modelRef.current.rotation.y) * 0.02;
 
       // Smooth X rotation (with clamping between 1.05 and 1.35)
       const targetX = mouse.current.y * 0.5;
