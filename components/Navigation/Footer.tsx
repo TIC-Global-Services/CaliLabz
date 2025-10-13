@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer className="!bg-black text-white">
       {/* Top Section */}
-      <div className=" mx-auto px-6 md:px-14 py-16 grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-white/10">
+      <div className=" mx-auto px-6 lg:px-14 py-16 grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-white/10">
         {/* Center Logo (First on mobile) */}
         <div className="flex flex-col md:items-center md:justify-center text-start md:text-center order-1 md:order-2">
           <h1 className="font-kento text-5xl text-[#1A4436] tracking-wide">

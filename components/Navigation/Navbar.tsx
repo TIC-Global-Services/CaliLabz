@@ -16,7 +16,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [logoSrc, setLogoSrc] = useState("/Cali_Logo_White.png");
 
-  // refs for GSAP
+  // refs
   const menuRef = useRef<HTMLDivElement | null>(null);
   const linksRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const navbarRef = useRef<HTMLDivElement | null>(null);
@@ -28,7 +28,7 @@ const Navbar = () => {
     { name: "Products", href: "#" },
     { name: "Franchise", href: "#" },
     { name: "Wholesale", href: "#" },
-    { name: "Gallery", href: "#" },
+    { name: "Gallery", href: "/gallery" },
   ];
 
   // GSAP mobile menu animation
@@ -39,7 +39,6 @@ const Navbar = () => {
         { x: "100%" },
         { x: "0%", duration: 0.6, ease: "power3.out" }
       );
-
       gsap.fromTo(
         linksRef.current,
         { opacity: 0, y: 30 },
@@ -53,60 +52,52 @@ const Navbar = () => {
         }
       );
     } else if (!open && menuRef.current) {
-      gsap.to(menuRef.current, {
-        x: "100%",
-        duration: 0.5,
-        ease: "power3.in",
-      });
+      gsap.to(menuRef.current, { x: "100%", duration: 0.5, ease: "power3.in" });
     }
   }, [open]);
 
-  // Scroll-trigger for text/logo/icon color
+  // ✅ Scroll-trigger for home page only
   useEffect(() => {
-    if (navbarRef.current) {
-      ScrollTrigger.create({
-        trigger: "body",
-        start: "top top",
-        end: 200,
-        onUpdate: (self) => {
-          const color = self.progress > 0.05 ? "#000" : "#fff";
+    if (pathname === "/") {
+      // home page — scroll color animation
+      if (navbarRef.current) {
+        ScrollTrigger.create({
+          trigger: "body",
+          start: "top top",
+          end: 200,
+          onUpdate: (self) => {
+            const color = self.progress > 0.05 ? "#000" : "#fff";
+            gsap.to(linksRef.current, { color, duration: 0.2 });
+            setLogoSrc(
+              self.progress > 0.05 ? "/Cali_Logo.png" : "/Cali_Logo_White.png"
+            );
+            if (cartRef.current)
+              gsap.to(cartRef.current, { color, duration: 0.2 });
+            if (menuBtnRef.current)
+              gsap.to(menuBtnRef.current, { color, duration: 0.2 });
+          },
+        });
+      }
+    } else {
+      // all other pages — solid black navbar
+      setLogoSrc("/Cali_Logo.png");
 
-          // Links color
-          gsap.to(linksRef.current, { color, duration: 0.2 });
-
-          // Logo
-          setLogoSrc(
-            self.progress > 0.05 ? "/Cali_Logo.png" : "/Cali_Logo_White.png"
-          );
-
-          // Cart & menu button
-          if (cartRef.current)
-            gsap.to(cartRef.current, { color, duration: 0.2 });
-          if (menuBtnRef.current)
-            gsap.to(menuBtnRef.current, { color, duration: 0.2 });
-        },
+      // immediately set all nav elements to black
+      gsap.set([linksRef.current, cartRef.current, menuBtnRef.current], {
+        color: "#000",
       });
     }
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
-  }, []);
+  }, [pathname]);
 
   return (
-<div
-  ref={navbarRef}
-  className="
-    fixed top-0 left-0 z-50
-    w-full flex items-center justify-between
-    py-4 md:py-6 px-6 md:px-14
-    transition-colors duration-300
-    bg-white/5 backdrop-blur-md
-    
-    
-    overflow-hidden
-  "
->
+    <div
+      ref={navbarRef}
+      className={`fixed top-0 left-0 z-50 w-full flex items-center justify-between py-4 lg:py-6 px-6 lg:px-14 overflow-hidden `}
+    >
       {/* Logo */}
       <Link href="/" className="flex items-center">
         <Image
@@ -118,8 +109,8 @@ const Navbar = () => {
         />
       </Link>
 
-      {/* Desktop / Tablet Menu */}
-      {device !== "mobile" && (
+      {/* Desktop Menu */}
+      {device !== "mobile" && device !== "tablet" && (
         <div className="flex items-center space-x-6">
           {links.map((link, idx) => (
             <Link
@@ -128,7 +119,9 @@ const Navbar = () => {
               ref={(el) => {
                 linksRef.current[idx] = el;
               }}
-              className={`uppercase rounded-full transition-all duration-300 text-sm font-medium text-white ${
+              className={`uppercase rounded-full transition-all duration-300 text-sm font-medium ${
+                pathname === "/" ? "text-white" : "text-black"
+              } ${
                 pathname === link.href
                   ? "bg-white/50 px-6 py-2 !text-black"
                   : "px-6 py-2"
@@ -148,42 +141,46 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {device === "mobile" && (
-          <button
-            ref={menuBtnRef}
-            onClick={() => setOpen(!open)}
-            className="z-50 text-white"
-          >
-            {open ? <Close size={30} /> : <Menu size={30} />}
-          </button>
-        )}
+        {device === "mobile" ||
+          (device == "tablet" && (
+            <button
+              ref={menuBtnRef}
+              onClick={() => setOpen(!open)}
+              className={`z-50 ${
+                pathname === "/" ? "text-white" : " text-black"
+              } `}
+            >
+              {open ? <Close size={30} /> : <Menu size={30} />}
+            </button>
+          ))}
       </div>
 
       {/* Mobile Menu */}
-      {device === "mobile" && (
-        <div
-          ref={menuRef}
-          className="fixed top-0 right-0 h-screen w-3/4 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center space-y-6 translate-x-full z-40"
-        >
-          {links.map((link, idx) => (
-            <Link
-              key={idx}
-              href={link.href}
-              ref={(el) => {
-                linksRef.current[idx] = el;
-              }}
-              className={`uppercase text-lg ${
-                pathname === link.href
-                  ? "text-sky-400 font-semibold"
-                  : "text-white"
-              }`}
-              onClick={() => setOpen(false)}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
-      )}
+      {device === "mobile" ||
+        (device == "tablet" && (
+          <div
+            ref={menuRef}
+            className="fixed top-0 right-0 h-screen w-3/4 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center space-y-6 translate-x-full z-40"
+          >
+            {links.map((link, idx) => (
+              <Link
+                key={idx}
+                href={link.href}
+                ref={(el) => {
+                  linksRef.current[idx] = el;
+                }}
+                className={`uppercase text-lg ${
+                  pathname === link.href
+                    ? "text-sky-400 font-semibold"
+                    : "text-white"
+                }`}
+                onClick={() => setOpen(false)}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+        ))}
     </div>
   );
 };

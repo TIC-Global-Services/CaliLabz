@@ -8,8 +8,9 @@ import { useDevice } from "@/hooks/useDevice";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import LogoModel from "./LogoModel";
-import SmokeCanvas from "../Reusable/Smoke";
-import WeedSmokeComponent from "../Reusable/WeedSmoke";
+// import WeedSmokeComponent from "../Reusable/WeedSmoke";
+// import SmokeCanvas from "../Reusable/SmokeBackground";
+import SmokeParticles from "../Reusable/SmokeBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,6 +27,21 @@ const Hero = () => {
   const smokeRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    // Entrance / Fade-in Animations (new)
+    const entranceTl = gsap.timeline({
+      defaults: { ease: "power2.out", duration: 0.8 },
+    });
+    entranceTl.from(buildingsRef.current, { opacity: 0, y: 50 });
+    entranceTl.from(overlayRef.current, { opacity: 0 }, "-=0.6");
+    entranceTl.from(textRef.current, { opacity: 0, y: 30 }, "-=0.6");
+    entranceTl.from(descRef.current, { opacity: 0, y: 20 }, "-=0.6");
+    entranceTl.from(
+      ModelRef.current,
+      { opacity: 0, y: 40, scale: 0.95 },
+      "-=0.5"
+    );
+
+    // Mousemove Parallax and Scroll-trigger (your original code)
     const handleMove = (e: MouseEvent) => {
       const { innerWidth, innerHeight } = window;
       const x = (e.clientX / innerWidth - 0.5) * 10;
@@ -66,8 +82,7 @@ const Hero = () => {
         },
       });
 
-      // Fade overlay, sky, and bring video in
-      tl.to(overlayRef.current, { opacity: 0.1, duration: 1 }, 0);
+      tl.to(overlayRef.current, { opacity: 0.5, duration: 1 }, 0);
       tl.to(skyRef.current, { opacity: 0, duration: 1 }, 0);
       tl.to(textRef.current, { color: "#000", duration: 1 }, 0.2);
       tl.fromTo(
@@ -82,18 +97,13 @@ const Hero = () => {
         { opacity: 1, y: 0, duration: 1 },
         0.4
       );
-
-      // Smoke effect animation
       tl.fromTo(
         smokeRef.current,
-        { opacity: 0, y: 100 },
-        { opacity: 0.8, y: 0, duration: 1.5 },
+        { opacity: 0 },
+        { opacity: 0.5, duration: 1.5, ease: "power2.out" },
         0.3
       );
-
       tl.to(buildingsRef.current, { zIndex: 10, duration: 0 }, 0.1);
-
-      // ⚡️ Bring Text + Model to Front After Scroll
       tl.to(
         [textRef.current, ModelRef.current],
         { zIndex: 40, duration: 0 },
@@ -110,7 +120,7 @@ const Hero = () => {
   return (
     <section
       ref={heroRef}
-      className="relative w-full overflow-hidden saturate-160"
+      className="relative w-full overflow-hidden max-h-screen saturate-160"
     >
       {/* Sky Background */}
       <Image
@@ -134,24 +144,23 @@ const Hero = () => {
       {/* White Overlay */}
       <div
         ref={overlayRef}
-        className="absolute inset-0 bg-black opacity-0 z-20 will-change-opacity"
+        className="absolute inset-0 bg-white opacity-0 z-20 will-change-opacity"
       />
 
       {/* Smoke Effect */}
       <div
         ref={smokeRef}
-        className=" absolute inset-0 z-20 w-full h-full "
+        className=" absolute inset-0 z-20 w-full h-full pointer-events-none touch-none"
       >
-        {/* <SmokeCanvas /> */}
-        <WeedSmokeComponent />
+        <SmokeParticles />
       </div>
 
       {/* Content */}
       <div className="relative z-20 flex flex-col items-center justify-center min-h-screen text-center px-6 h-screen">
-        <div className="absolute top-[15%] will-change-transform z-30">
+        <div className="absolute top-[20%] md:top-[15%] will-change-transform z-30">
           <h1
             ref={textRef}
-            className="font-kento text-5xl md:text-9xl text-white tracking-wide"
+            className="font-kento text-[52px] md:text-9xl text-white tracking-wide"
           >
             Cali Labz
           </h1>
@@ -166,7 +175,7 @@ const Hero = () => {
             at our core, we serve both private customers and business partners.
           </p>
 
-          <div ref={ModelRef} className=" z-40">
+          <div ref={ModelRef} className=" z-40 pointer-events-none touch-none">
             <LogoModel />
           </div>
         </div>

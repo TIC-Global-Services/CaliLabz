@@ -60,8 +60,11 @@ function Logo() {
 
 const LogoModel = () => {
   return (
-    <div className="w-full h-[50dvh] z-40">
-      <Canvas camera={{ position: [0, 0, 5], fov:60 }}>
+    <div className="w-full h-[50dvh] z-40 pointer-events-none touch-none">
+      <Canvas camera={{ position: [0, 0, 5], fov:60 }} style={{
+          pointerEvents: "none", 
+          touchAction: "none",
+        }}>
         <ambientLight intensity={1.2} />
         <Logo />
         <OrbitControls enableZoom={false} enableRotate={false} />
